@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Toaster } from "react-hot-toast";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import ErrorNotFound from "./components/ErrorNotFound";
+import ProtectedRoute from "./components/routes/ProtectedRoute";
+import PublicRoute from "./components/routes/PublicRoute";
+import DashboardLayout from "./containers/DashboardLayout";
+import Login from "./pages/Login";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Toaster position="bottom-right" reverseOrder={false} />
+
+      <Routes>
+        <Route path="" element={<PublicRoute redirectRoute={"/home"} />}>
+          <Route path="/login" element={<Login />} />
+
+          <Route index element={<Navigate replace to="/login" />} />
+        </Route>
+
+        <Route path="" element={<ProtectedRoute redirectRoute={"/login"} />}>
+          <Route path="/*" element={<DashboardLayout />} />
+        </Route>
+
+        <Route path="*" element={<Navigate replace to="/login" />} />
+
+        <Route element={<ErrorNotFound />} />
+      </Routes>
+    </Router>
   );
 }
 
