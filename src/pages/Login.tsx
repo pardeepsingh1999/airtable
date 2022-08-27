@@ -25,19 +25,24 @@ const Login = () => {
 
       setLoading(true);
 
+      // student query params - get student by name
       const userDataParams = {
         filterByFormula: `{Name}='${name}'`,
       };
 
+      // hit api call to get student details
       const { records: userData }: any = await getStudents(userDataParams);
 
+      // if userData found by name in airTable api
       if (userData.length && userData[0]) {
+        // dispatch/add student details in redux store
         dispatch(
           addUserCredential({
             studentId: userData[0].id,
             fields: { ...userData[0].fields },
           })
         );
+        // redirect to home page
         navigate("/home");
       } else {
         errorHandler({ reason: "User not found" });
